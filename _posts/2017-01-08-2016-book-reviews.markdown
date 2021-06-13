@@ -1,0 +1,75 @@
+---
+layout: post
+title: 2016 Book Reviews
+date: '2017-01-08 07:01:31'
+---
+
+I managed to read a few good books last year, and thought of reviewing them. So here goes...
+
+---
+## Jonathan Strange and Mr. Norrell
+Author: Susanna Clarke
+Genre: Fantasy
+My Rating: ★★★★★
+
+This one was recommended by a friend who has similar tastes, so I was quite sure I would like it. And boy, was it amazing! Susanna Clarke has done a great job with the writing and the language. The story is wonderful, although I found it a bit slow at times. (It is a very long book too). Nonetheless, it kept me entertained, and every chapter brought in excitement. I won't divulge anything about the story, because I feel that it will be best experienced when you know nothing about it.
+
+This book also has the potential to make a great TV show, and I believe there's already one on BBC One.
+
+Did I mention that this book has a ton of footnotes? Makes it a whole bunch more fun. And for that reason, I'd recommend getting a hardcopy instead of an e-book. Footnotes are a pain to read on the Kindle.
+
+## Ready Player One
+Author: Ernest Cline
+Genre: Sci-fi
+My Rating: ★★★★☆
+
+This one is probably oriented towards the young-adult audience. Nonetheless, it was fun to read, especially if you're fond of technology, video-games and a hint of dystopia.
+
+The book is fast paced, almost has a [Hollywood blockbuster](http://www.imdb.com/title/tt1677720/) feel to it. If you grew up in the 80s or 70s, you may connect with a lot of the retro video-game and pop culture references.
+
+## Zen And The Art Of Motorcycle Maintenance
+Author: Robert Pirsig
+Genre: Philosophy, fiction
+My Rating: ★★★★★
+
+This book was recommended by [a colleague](https://twitter.com/_zenx_). I'm glad I went ahead and picked it up. Because it's one of those books that expands your perception, or adds to the model of how you see things in the world. The last book that did that for me was [The Selfish Gene](https://www.goodreads.com/book/show/61535.The_Selfish_Gene) by Dawkins, and it has been more than seven years since I read that one. So I thoroughly enjoyed reading this.
+
+The story revolves around the author who is on a motorcycle trip with his son, and his thoughts during the trip. After all, there isn't much to do on a road trip other than thinking and observing. The narrative is unique and beautiful. There is a lot of discussion around the nature of art and science and technology, and I could draw a lot of parallels with software development.
+
+This book rekindled my interest in philosophy. I'll probably be reading more in this area, and will surely re-read this book sometime in the future.
+
+
+## Domain-Driven Design: Tackling Complexity in the Heart of Software
+Author: Eric Evans
+Genre: Software, technology
+My Rating: ★★★★☆
+
+I picked up this book as part of a study group at work. In one of my older jobs, I saw a piece of software being build from scratch, and develop into an unmaintainable mess as we kept adding features and increasing complexity. I learnt a lot from that project, but one of the key missing elements was DDD.
+
+Thanks to the book, and more so to the study group, I got a lot of answers to some of the questions that had bothered me about developing large, complex software systems. Concepts of DDD fit quite well with many of the modern paradigms of software development like microservices, functional-reactive patterns, messaging systems and so on.
+
+Domain Driven Design should be a must-read for any software developer. Unfortunately, the book was also boring as hell. Eric Evans is not a good writer in the sense of keeping the reader engaged. If you do want to learn about DDD, I would suggest [Vaughn Vernon](https://twitter.com/VaughnVernon). I found his work to be a lot easier to read compared to Evans.
+
+That said, this is an important book, and the seminal book on DDD.
+
+
+## The Testament
+Author: John Grisham
+Genre: Fiction, Drama, Mystery
+My Rating: ★★★☆☆
+
+This book is about a crazy old rich dude who dies, leaves behind a lot of money and his greedy ex-wives and kids want everything for themselves. And then comes in the protagonist lawyer who'll save the day. Okay, that's probably a very crude synopsis of the book. But I found this book to be just "meh", not really my kind of book. The writing was pretty good though.
+
+## Below Another Sky
+Author: Rick Ridgeway
+Genre: Travel, Adventure
+My Rating: ★★★★★
+
+A colleague at work recommended this book and let me borrow his copy. I still haven't finished reading this, but thought I'd add this to the list.
+
+This book is about Rick Ridgeway's journey through Nepal, Tibet and China. He's tracing back his journey to Minya Konka, where he lost his friend in an avalanche about twenty years earlier. His friend's daughter accompanies him, hoping to find her father's grave on the mountain.
+
+This was the first time I read a book of this genre. Rick Ridgeway is an excellent and captivating writer. The book is a bit like a memoir, with Rick reflecting on this previous adventures, lost friends and how he has matured over the years.
+
+---
+So there you have it. Hoping for a lot of of good reading in 2017 as well. If you have any books to recommend, do let me know.
