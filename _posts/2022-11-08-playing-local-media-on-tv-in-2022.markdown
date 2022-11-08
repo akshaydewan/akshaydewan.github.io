@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Playing Local Media on your TV in 2022
-date: '2022-11-09 00:00:00'
+date: '2022-11-08 00:00:00'
 tags:
 - plex
 - apple tv
