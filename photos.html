@@ -1,0 +1,43 @@
+---
+layout: photos
+title: Photos
+permalink: /photos/
+---
+
+<h1 class="photos-heading">{{ page.title | escape }}</h1>
+
+{% if site.data.photos.size > 0 %}
+<div class="photos-grid">
+  {% for photo in site.data.photos %}
+  <figure class="photo">
+    <a class="photo-link" href="{{ photo.url | escape }}" aria-label="View photo: {{ photo.caption | escape }}" aria-haspopup="dialog" aria-controls="photo-viewer">
+      <img
+        src="{{ photo.url | escape }}"
+        alt="{{ photo.caption | escape }}"
+        width="{{ photo.width | escape }}"
+        height="{{ photo.height | escape }}"
+        loading="lazy"
+        decoding="async"
+      >
+    </a>
+    <figcaption>{{ photo.caption | escape }}</figcaption>
+  </figure>
+  {% endfor %}
+</div>
+
+<dialog id="photo-viewer" class="photo-viewer" aria-label="Photo viewer" aria-describedby="photo-viewer-caption photo-viewer-counter">
+  <button type="button" class="photo-viewer-close" aria-label="Close photo viewer" autofocus>&times;</button>
+  <span id="photo-viewer-counter" class="photo-viewer-counter" aria-live="polite"></span>
+  <button type="button" class="photo-viewer-previous" aria-label="Previous photo">&#8249;</button>
+  <figure class="photo-viewer-figure">
+    <div class="photo-viewer-image-area">
+      <img class="photo-viewer-image" alt="" decoding="async">
+      <p class="photo-viewer-status" role="status" hidden></p>
+    </div>
+    <figcaption id="photo-viewer-caption" class="photo-viewer-caption"></figcaption>
+  </figure>
+  <button type="button" class="photo-viewer-next" aria-label="Next photo">&#8250;</button>
+</dialog>
+{% else %}
+<p class="photos-empty">Photos coming soon.</p>
+{% endif %}

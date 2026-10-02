@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+  {%- include head.html -%}
+  <body class="photos-page">
+    {%- include header.html -%}
+    <main class="page-content photos-content" aria-label="Content">
+      <div class="photos-wrapper">
+        {{ content }}
+      </div>
+    </main>
+    {%- include footer.html -%}
+    <script src="{{ '/assets/photos.js' | relative_url }}" defer></script>
+  </body>
+</html>
