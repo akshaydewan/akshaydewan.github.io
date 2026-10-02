@@ -52,7 +52,8 @@
   function formatDetails(metadata) {
     const tags = metadata.exif || {};
     const camera = equipmentName(tagText(tags.Make), tagText(tags.Model));
-    const lens = equipmentName(tagText(tags.LensMake), tagText(tags.LensModel) || tagText(tags.LensSpecification));
+    const lens = tagText(tags.LensModel) ||
+      equipmentName(tagText(tags.LensMake), tagText(tags.LensSpecification));
     const exposure = tagNumber(tags.ExposureTime);
     const aperture = tagNumber(tags.FNumber);
     const iso = tagNumber(tags.ISOSpeed) || tagNumber(tags.ISOSpeedRatings) ||
@@ -69,11 +70,11 @@
     if (aperture !== null) settings.push(`f/${Number(aperture.toFixed(2))}`);
     if (iso !== null) settings.push(`ISO ${Math.round(iso)}`);
 
-    const rows = [];
-    if (camera) rows.push(`Camera: ${camera}`);
-    if (lens) rows.push(`Lens: ${lens}`);
-    if (settings.length) rows.push(settings.join(" · "));
-    return rows;
+    const fields = [];
+    if (camera) fields.push(`📷 ${camera}`);
+    if (lens) fields.push(lens);
+    fields.push(...settings);
+    return fields.length ? [fields.join(" · ")] : [];
   }
 
   function readDetails(url) {
