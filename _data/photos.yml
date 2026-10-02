@@ -1,6 +1,42 @@
-# Add photos in the order you want them displayed:
-# - url: "https://photos.akshaydewan.me/example.jpg"
-#   caption: "Evening light in the mountains"
-#   width: 1600
-#   height: 1067
-[]
+- url: "https://photos.akshaydewan.me/2025-06-24/lovey_dovey_16x9.webp"
+  width: 1991
+  height: 1120
+- url: "https://photos.akshaydewan.me/2025-06-22/DSC01890.webp"
+  width: 3240
+  height: 2160
+- url: "https://photos.akshaydewan.me/2025-06-22/DSC01878.webp"
+  width: 3240
+  height: 2160
+- url: "https://photos.akshaydewan.me/2025-06-22/DSC01876.webp"
+  width: 3240
+  height: 2160
+- url: "https://photos.akshaydewan.me/2025-06-18/egret.webp"
+  width: 2051
+  height: 1367
+- url: "https://photos.akshaydewan.me/2025-06-05/DSC01654.webp"
+  width: 3012
+  height: 2151
+- url: "https://photos.akshaydewan.me/2025-06-03/DSC01640-Enhanced-NR.webp"
+  width: 2011
+  height: 2160
+- url: "https://photos.akshaydewan.me/2025-06-03/DSC01632-Enhanced-NR.webp"
+  width: 2700
+  height: 2160
+- url: "https://photos.akshaydewan.me/2025-06-01/Indian%20pied%20myna.webp"
+  width: 2215
+  height: 1477
+- url: "https://photos.akshaydewan.me/2025-06-01/DSC01533.webp"
+  width: 3840
+  height: 2160
+- url: "https://photos.akshaydewan.me/2025-06-01/DSC01071-Enhanced-NR.webp"
+  width: 3149
+  height: 1968
+- url: "https://photos.akshaydewan.me/2025-06-01/DSC00980.webp"
+  width: 2065
+  height: 1331
+- url: "https://photos.akshaydewan.me/2025-05-30/DSC00705-Enhanced-NR.webp"
+  width: 1728
+  height: 2160
+- url: "https://photos.akshaydewan.me/2025-05-23/grey_bellied_cuckoo.webp"
+  width: 2950
+  height: 1967
