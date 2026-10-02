@@ -216,13 +216,27 @@
   color: #bbb;
 }
 
-.photo-viewer-caption {
+.photo-viewer-details {
   max-height: 20vh;
   overflow: auto;
   overflow-wrap: anywhere;
   text-align: center;
   color: #bbb;
   font-size: 16px;
+}
+
+.photo-viewer-caption {
+  margin: 0;
+}
+
+.photo-viewer-exif {
+  margin-top: 8px;
+  color: #aaa;
+  font-size: 14px;
+
+  p {
+    margin: 4px 0 0;
+  }
 }
 
 @media screen and (max-width: 800px) {

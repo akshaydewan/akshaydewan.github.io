@@ -34,7 +34,10 @@ permalink: /photos/
       <img class="photo-viewer-image" alt="" decoding="async">
       <p class="photo-viewer-status" role="status" hidden></p>
     </div>
-    <figcaption id="photo-viewer-caption" class="photo-viewer-caption"></figcaption>
+    <figcaption class="photo-viewer-details">
+      <p id="photo-viewer-caption" class="photo-viewer-caption"></p>
+      <div class="photo-viewer-exif" aria-live="polite" aria-atomic="true" hidden></div>
+    </figcaption>
   </figure>
   <button type="button" class="photo-viewer-next" aria-label="Next photo">&#8250;</button>
 </dialog>

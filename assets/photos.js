@@ -12,8 +12,125 @@
   const previous = viewer.querySelector(".photo-viewer-previous");
   const next = viewer.querySelector(".photo-viewer-next");
   const close = viewer.querySelector(".photo-viewer-close");
+  const details = viewer.querySelector(".photo-viewer-exif");
+  const detailsCache = new Map();
+  const exifOptions = {
+    length: "auto",
+    expanded: true,
+    includeOffsets: true,
+    computed: true,
+    includeTags: {
+      file: ["FileType"],
+      exif: [
+        "Make", "Model", "LensMake", "LensModel", "LensSpecification",
+        "ExposureTime", "FNumber", "ISOSpeedRatings", "ISOSpeed",
+        "RecommendedExposureIndex", "StandardOutputSensitivity"
+      ]
+    }
+  };
+  let detailsRequest = 0;
   let currentIndex = 0;
   let opener = null;
+
+  function tagText(tag) {
+    return typeof tag?.description === "string" ? tag.description.trim() : "";
+  }
+
+  function tagNumber(tag) {
+    const value = Array.isArray(tag?.computed) ? tag.computed[0] : tag?.computed;
+    return typeof value === "number" && Number.isFinite(value) && value > 0 ? value : null;
+  }
+
+  function equipmentName(make, model) {
+    if (!model) return make;
+    // Nikon, for example, writes "NIKON CORPORATION" and "NIKON D750".
+    const brand = make.replace(/\s+(corporation|corp\.?|inc\.?|ltd\.?)$/i, "").toLowerCase();
+    if (!brand || model.toLowerCase().includes(brand)) return model;
+    return `${make} ${model}`;
+  }
+
+  function formatDetails(metadata) {
+    const tags = metadata.exif || {};
+    const camera = equipmentName(tagText(tags.Make), tagText(tags.Model));
+    const lens = equipmentName(tagText(tags.LensMake), tagText(tags.LensModel) || tagText(tags.LensSpecification));
+    const exposure = tagNumber(tags.ExposureTime);
+    const aperture = tagNumber(tags.FNumber);
+    const iso = tagNumber(tags.ISOSpeed) || tagNumber(tags.ISOSpeedRatings) ||
+      tagNumber(tags.RecommendedExposureIndex) || tagNumber(tags.StandardOutputSensitivity);
+    const settings = [];
+
+    if (exposure !== null) {
+      const reciprocal = 1 / exposure;
+      const denominator = Math.round(reciprocal);
+      const shutter = exposure < 1 && Math.abs(reciprocal - denominator) / reciprocal < 0.01
+        ? `1/${denominator}` : Number(exposure.toPrecision(3)).toString();
+      settings.push(`${shutter} s`);
+    }
+    if (aperture !== null) settings.push(`f/${Number(aperture.toFixed(2))}`);
+    if (iso !== null) settings.push(`ISO ${Math.round(iso)}`);
+
+    const rows = [];
+    if (camera) rows.push(`Camera: ${camera}`);
+    if (lens) rows.push(`Lens: ${lens}`);
+    if (settings.length) rows.push(settings.join(" · "));
+    return rows;
+  }
+
+  function readDetails(url) {
+    if (!detailsCache.has(url)) {
+      const pending = Promise.resolve()
+        .then(() => window.ExifReader.load(url, exifOptions))
+        .then((metadata) => {
+          // WebP EXIF can follow the pixel data, beyond the initial range.
+          // ExifReader 4.46.0 may consider its leading VP8X header complete.
+          if (metadata.file?.FileType?.value === "webp" && !metadata.exif) {
+            return window.ExifReader.load(url, { ...exifOptions, length: undefined });
+          }
+          return metadata;
+        })
+        .then(formatDetails)
+        .catch((error) => {
+          // Auto reading reports a valid WebP without metadata as unsupported
+          // after reaching EOF. Cache that absence, while allowing other failures
+          // (including network/CORS errors) to be retried.
+          if (error.message?.startsWith('length: "auto" could not locate metadata in this file')) return [];
+          throw error;
+        });
+      detailsCache.set(url, pending);
+      // Failed reads can be retried; successful and metadata-free reads are cached.
+      pending.catch(() => {
+        if (detailsCache.get(url) === pending) detailsCache.delete(url);
+      });
+    }
+    return detailsCache.get(url);
+  }
+
+  function clearDetails() {
+    details.hidden = true;
+    details.replaceChildren();
+  }
+
+  async function showDetails(url) {
+    const request = ++detailsRequest;
+    clearDetails();
+    if (!window.ExifReader || typeof window.ExifReader.load !== "function") return;
+    details.textContent = "Reading photo details…";
+    details.hidden = false;
+
+    try {
+      const rows = await readDetails(url);
+      if (request !== detailsRequest || !viewer.open) return;
+      clearDetails();
+      for (const text of rows) {
+        const row = document.createElement("p");
+        row.textContent = text;
+        details.append(row);
+      }
+      details.hidden = rows.length === 0;
+    } catch {
+      if (request === detailsRequest && viewer.open) clearDetails();
+    }
+  }
 
   function showPhoto(index) {
     if (index < 0 || index >= links.length) return;
@@ -39,6 +156,7 @@
       close.focus();
     }
     image.src = original.src;
+    showDetails(original.src);
   }
 
   image.addEventListener("load", () => {
@@ -80,6 +198,10 @@
 
   // Native dialogs handle Escape and keep keyboard focus inside the viewer.
   viewer.addEventListener("close", () => {
+    // A native close event can arrive after the viewer has already reopened.
+    if (viewer.open) return;
+    ++detailsRequest;
+    clearDetails();
     document.documentElement.classList.remove("photo-viewer-open");
     image.removeAttribute("src");
     if (opener) opener.focus({ preventScroll: true });
