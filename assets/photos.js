@@ -294,6 +294,7 @@
         (document.activeElement === next && next.disabled)) {
       close.focus();
     }
+    image.crossOrigin = "anonymous";
     image.src = original.src;
     if (keepDetailsOpen) showDetails(original.src);
   }
