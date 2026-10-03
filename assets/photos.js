@@ -1,4 +1,48 @@
 (() => {
+  const gallery = document.querySelector(".photos-grid");
+  if (!gallery) return;
+  const photos = Array.from(gallery.querySelectorAll(".photo"));
+  const narrowScreen = window.matchMedia("(max-width: 800px)");
+  const gap = 24;
+  let pendingFrame = null;
+
+  function arrangePhotos() {
+    pendingFrame = null;
+    gallery.classList.add("is-masonry");
+    const columns = narrowScreen.matches ? 1 : 2;
+    const width = gallery.getBoundingClientRect().width;
+    const columnWidth = (width - gap * (columns - 1)) / columns;
+    const heights = Array(columns).fill(0);
+    // Read every height before positioning so captions and image loading are
+    // accounted for without changing DOM or keyboard/navigation order.
+    const photoHeights = photos.map((photo) => photo.getBoundingClientRect().height);
+    photos.forEach((photo, index) => {
+      const column = columns === 1 || heights[0] <= heights[1] ? 0 : 1;
+      photo.style.transform = `translate(${column * (columnWidth + gap)}px, ${heights[column]}px)`;
+      heights[column] += photoHeights[index] + gap;
+    });
+    gallery.style.height = `${Math.max(0, ...heights) - (photos.length ? gap : 0)}px`;
+  }
+
+  function scheduleLayout() {
+    if (pendingFrame === null) pendingFrame = requestAnimationFrame(arrangePhotos);
+  }
+
+  arrangePhotos();
+  if (typeof ResizeObserver === "function") {
+    const observer = new ResizeObserver(scheduleLayout);
+    photos.forEach((photo) => observer.observe(photo));
+  }
+  window.addEventListener("resize", scheduleLayout);
+  photos.forEach((photo) => {
+    const image = photo.querySelector("img");
+    image.addEventListener("load", scheduleLayout);
+    image.addEventListener("error", scheduleLayout);
+  });
+  document.fonts?.ready.then(scheduleLayout);
+})();
+
+(() => {
   const viewer = document.querySelector("#photo-viewer");
   const links = Array.from(document.querySelectorAll(".photo-link"));
 

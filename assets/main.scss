@@ -89,6 +89,18 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px;
   align-items: start;
+
+  &.is-masonry {
+    display: block;
+    position: relative;
+
+    .photo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: calc((100% - 24px) / 2);
+    }
+  }
 }
 
 .photo {
@@ -508,6 +520,10 @@
 @media screen and (max-width: 800px) {
   .photos-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .photos-grid.is-masonry .photo {
+    width: 100%;
   }
 }
 
