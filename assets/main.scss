@@ -50,7 +50,6 @@
 }
 
 .photos-wrapper {
-  max-width: 1400px;
   margin: 0 auto;
   padding: 0 24px;
 }
@@ -119,11 +118,11 @@
 .photo-viewer {
   box-sizing: border-box;
   inset: 0;
-  width: calc(100% - 48px);
-  height: calc(100vh - 64px);
-  height: calc(100dvh - 64px);
-  max-width: 1440px;
-  max-height: 880px;
+  width: calc(100% - 24px);
+  height: calc(100vh - 24px);
+  height: calc(100dvh - 24px);
+  max-width: none;
+  max-height: none;
   margin: auto;
   padding: 16px;
   border: 1px solid #363d43;
@@ -258,7 +257,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: scale-down;
 }
 
 .photo-viewer-status {
@@ -286,15 +285,14 @@
 .photo-details-dialog {
   box-sizing: border-box;
   position: fixed;
-  top: 32px;
-  top: unquote("max(32px, calc((100dvh - 880px) / 2))");
-  right: unquote("max(24px, calc((100vw - 1440px) / 2))");
+  top: 12px;
+  right: 12px;
   left: auto;
   width: 360px;
-  max-width: calc(100% - 48px);
-  height: calc(100vh - 64px);
-  height: calc(100dvh - 64px);
-  max-height: 880px;
+  max-width: calc(100% - 24px);
+  height: calc(100vh - 24px);
+  height: calc(100dvh - 24px);
+  max-height: none;
   margin: 0;
   padding: 24px;
   overflow-x: hidden;
@@ -446,9 +444,6 @@
 
 @media screen and (max-width: 900px) {
   .photo-viewer {
-    width: calc(100% - 24px);
-    height: calc(100vh - 24px);
-    height: calc(100dvh - 24px);
     padding: 12px;
     border-radius: 12px;
   }
@@ -461,7 +456,6 @@
   .photo-details-dialog {
     top: auto;
     bottom: 12px;
-    bottom: unquote("max(12px, calc((100dvh - 880px) / 2))");
     right: 12px;
     width: calc(100% - 24px);
     max-width: none;
