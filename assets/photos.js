@@ -13,8 +13,8 @@
     const width = gallery.getBoundingClientRect().width;
     const columnWidth = (width - gap * (columns - 1)) / columns;
     const heights = Array(columns).fill(0);
-    // Read every height before positioning so captions and image loading are
-    // accounted for without changing DOM or keyboard/navigation order.
+    // Read every height before positioning to account for image loading
+    // without changing DOM or keyboard/navigation order.
     const photoHeights = photos.map((photo) => photo.getBoundingClientRect().height);
     photos.forEach((photo, index) => {
       const column = columns === 1 || heights[0] <= heights[1] ? 0 : 1;
@@ -285,7 +285,7 @@
       if (value) image.setAttribute(attribute, value);
       else image.removeAttribute(attribute);
     }
-    caption.textContent = links[index].closest("figure").querySelector("figcaption").textContent;
+    caption.textContent = original.alt;
     counter.textContent = `${index + 1} / ${links.length}`;
     previous.disabled = index === 0;
     next.disabled = index === links.length - 1;

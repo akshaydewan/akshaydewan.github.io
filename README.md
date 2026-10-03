@@ -24,7 +24,7 @@ containing a URL, caption, width, and height (no `photos:` wrapper is needed):
 Photos are placed in YAML order into the shorter column for a masonry layout.
 The viewer and keyboard navigation follow YAML order. Move an entire entry to
 change the order.
-Captions are displayed below each photo and also used as image alt text. Use
+Captions are displayed only in the modal viewer and also used as image alt text. Use
 quoted YAML strings; escape double quotes inside a caption as `\"`.
 Set `width` and `height` to the uploaded image's actual pixel dimensions, as
 positive integers without units. No thumbnails or EXIF fields are needed.
@@ -38,7 +38,7 @@ width while keeping their height proportional.
 The gallery uses the available page width with 24px side gutters and at most
 two columns. Each column stacks independently with 24px spacing, avoiding gaps
 below shorter photos. It switches to one column on narrow screens. The layout
-updates when the viewport, image sizes, or captions change; without JavaScript
+updates when the viewport or image sizes change; without JavaScript
 the gallery uses a regular grid.
 
 Click a photo to open a modal viewer filling the viewport with a 12px margin.
