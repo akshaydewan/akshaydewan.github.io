@@ -1,0 +1,79 @@
+---
+layout: photos
+---
+
+<h1 class="photos-heading">{{ page.title | escape }}</h1>
+
+{% assign photos = site.data.photos[page.album] %}
+{% if photos.size > 0 %}
+{% include photo-icons.html %}
+<div class="photos-grid">
+  {% for photo in photos %}
+  <figure class="photo">
+    <a class="photo-link" href="{{ photo.url | escape }}" aria-label="View photo: {{ photo.caption | escape }}" aria-haspopup="dialog" aria-controls="photo-viewer">
+      <img
+        crossorigin="anonymous"
+        src="{{ photo.url | escape }}"
+        alt="{{ photo.caption | escape }}"
+        width="{{ photo.width | escape }}"
+        height="{{ photo.height | escape }}"
+        loading="lazy"
+        decoding="async"
+      >
+    </a>
+  </figure>
+  {% endfor %}
+</div>
+
+<dialog id="photo-viewer" class="photo-viewer" aria-label="Photo viewer" aria-describedby="photo-viewer-caption photo-viewer-counter" data-exif-reader-src="{{ '/assets/vendor/exif-reader-4.46.0.js' | relative_url }}">
+  <div class="photo-viewer-toolbar">
+    <span id="photo-viewer-counter" class="photo-viewer-counter" aria-live="polite"></span>
+    <div class="photo-viewer-actions">
+      <button type="button" class="photo-viewer-info" aria-label="Show photo details" aria-haspopup="dialog" aria-expanded="false" aria-controls="photo-details-dialog">
+        <svg class="photo-icon" aria-hidden="true" focusable="false"><use href="#photo-icon-camera"></use></svg>
+        <span>EXIF</span>
+      </button>
+      <button type="button" class="photo-viewer-close" aria-label="Close photo viewer" autofocus>
+        <svg class="photo-icon" aria-hidden="true" focusable="false"><use href="#photo-icon-close"></use></svg>
+      </button>
+    </div>
+  </div>
+  <figure class="photo-viewer-figure">
+    <div class="photo-viewer-image-area">
+      <img class="photo-viewer-image" crossorigin="anonymous" alt="" decoding="async">
+      <p class="photo-viewer-status" role="status" hidden></p>
+      <button type="button" class="photo-viewer-previous" aria-label="Previous photo">
+        <svg class="photo-icon" aria-hidden="true" focusable="false"><use href="#photo-icon-previous"></use></svg>
+      </button>
+      <button type="button" class="photo-viewer-next" aria-label="Next photo">
+        <svg class="photo-icon" aria-hidden="true" focusable="false"><use href="#photo-icon-next"></use></svg>
+      </button>
+    </div>
+    <figcaption class="photo-viewer-details">
+      <p id="photo-viewer-caption" class="photo-viewer-caption"></p>
+    </figcaption>
+  </figure>
+  <dialog id="photo-details-dialog" class="photo-details-dialog" aria-modal="false" aria-labelledby="photo-details-title" aria-describedby="photo-details-description">
+    <div class="photo-details-header">
+      <h2 id="photo-details-title">Photo details</h2>
+      <button type="button" class="photo-details-close" aria-label="Close photo details" autofocus>
+        <svg class="photo-icon" aria-hidden="true" focusable="false"><use href="#photo-icon-close"></use></svg>
+      </button>
+    </div>
+    <p id="photo-details-description">EXIF data and camera information for this photo.</p>
+    <div class="photo-viewer-exif" aria-live="polite" aria-atomic="true"></div>
+    <section class="photo-details-license" aria-label="Photo license">
+      <h3>License</h3>
+      {% include cc-by-nc-sa.html %}
+    </section>
+  </dialog>
+  <template id="photo-details-loading">
+    <div class="photo-details-loading">
+      <p><span class="photo-details-spinner" aria-hidden="true"></span>Loading EXIF…</p>
+      <div class="photo-details-skeleton" aria-hidden="true"><span></span><span></span><span></span></div>
+    </div>
+  </template>
+</dialog>
+{% else %}
+<p class="photos-empty">Photos coming soon.</p>
+{% endif %}

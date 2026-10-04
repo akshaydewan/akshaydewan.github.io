@@ -6,8 +6,16 @@ This blog is hosted at [https://akshaydewan.me](https://akshaydewan.me)
 
 ## Photography gallery
 
-The gallery lives at `/photos/`. Upload compressed photos manually to the public
-R2 bucket, then edit `_data/photos.yml`. Replace `[]` with a list of entries
+The album index lives at `/photos/`. The Photos dropdown in the header and the
+index both list albums in the order defined in `_data/photo_albums.yml`.
+
+- **Hyderabad 2025-26**: `/photos/hyderabad_2025-26/`, backed by
+  `_data/photos/hyderabad_2025-26.yml`.
+- **Dalhousie 2024**: `/photos/dalhousie_2024/`, backed by
+  `_data/photos/dalhousie_2024.yml`.
+
+Upload compressed photos manually to the public R2 bucket, then edit the
+appropriate album's YAML file. Replace `[]` with a list of entries
 containing a URL, caption, width, and height (no `photos:` wrapper is needed):
 
 ```yaml
@@ -55,9 +63,51 @@ pixel dimensions belong in YAML; no scaled dimensions or separate thumbnail
 files are needed. The viewer loads the selected photo on demand. Without
 JavaScript or modal-dialog support, clicking a photo opens the image directly.
 
-Keep `[]` in `_data/photos.yml` to display “Photos coming soon.” The image
+Keep `[]` in an album's YAML file to display “Photos coming soon.” The image
 subdomain must be configured separately before its URLs will work. Images are
 not automatically discovered from the bucket.
+
+### Adding an album
+
+Run the helper script with an album ID and title:
+
+```sh
+./scripts/add-album.sh mumbai_2026 "Mumbai 2026"
+```
+
+It creates the empty photo YAML and gallery page, then adds the album to the
+end of the menu/index registry. Add photos to `_data/photos/mumbai_2026.yml`.
+IDs use lowercase letters/numbers separated by hyphens or underscores; the
+script refuses to overwrite files or register an existing ID. It works from
+any working directory and requires only Bash and standard command-line tools.
+
+To create an album manually, follow these steps:
+
+Create `_data/photos/<album-id>.yml` containing the photo list (or `[]`). Create
+`photos/<album-id>.html` with this front matter; no HTML body is needed:
+
+```yaml
+---
+layout: photo-gallery
+title: Album title
+album: album-id
+permalink: /photos/album-id/
+---
+```
+
+Add an entry to `_data/photo_albums.yml`, keeping its title and URL consistent
+with the page:
+
+```yaml
+- id: album-id
+  title: Album title
+  url: /photos/album-id/
+```
+
+The `album` value must match the photo data filename without `.yml`. Move an
+entire registry entry to reorder the dropdown and index. Each album uses the
+same gallery and viewer template; previous/next navigation stays within that
+album. New album pages do not need to be added to `header_pages`.
 
 ### EXIF details
 
@@ -67,7 +117,7 @@ the details pane closed does not request EXIF. A separate “Photo details” pa
 slides in from the right. It shows a loading card with a spinner and skeleton lines,
 then replaces that card with camera, lens, shutter speed, aperture, and ISO rows
 with matching SVG icons. JPEG and WebP are supported, and no EXIF fields need
-to be added to `_data/photos.yml`.
+to be added to the album YAML files.
 
 The photo controls remain usable while details are open. Navigating keeps the
 pane open and loads the selected photo's EXIF, reusing cached results or pending
