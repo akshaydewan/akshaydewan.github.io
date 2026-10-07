@@ -40,7 +40,9 @@ layout: photos
   </div>
   <figure class="photo-viewer-figure">
     <div class="photo-viewer-image-area">
-      <img class="photo-viewer-image" crossorigin="anonymous" alt="" decoding="async">
+      <div class="photo-viewer-zoom">
+        <img class="photo-viewer-image" crossorigin="anonymous" alt="" decoding="async" draggable="false">
+      </div>
       <p class="photo-viewer-status" role="status" hidden></p>
       <button type="button" class="photo-viewer-previous" aria-label="Previous photo">
         <svg class="photo-icon" aria-hidden="true" focusable="false"><use href="#photo-icon-previous"></use></svg>

@@ -51,6 +51,8 @@
 
   const image = viewer.querySelector(".photo-viewer-image");
   const imageArea = viewer.querySelector(".photo-viewer-image-area");
+  const zoomTarget = viewer.querySelector(".photo-viewer-zoom");
+  const mouseZoom = window.matchMedia("(any-hover: hover) and (any-pointer: fine)");
   const caption = viewer.querySelector(".photo-viewer-caption");
   const counter = viewer.querySelector(".photo-viewer-counter");
   const status = viewer.querySelector(".photo-viewer-status");
@@ -86,6 +88,94 @@
   let wheelDistance = 0;
   let lastWheelEvent = 0;
   let lastWheelNavigation = -Infinity;
+  let zoomed = false;
+  let zoomFrame = null;
+  let panPosition = { x: 0.5, y: 0.5 };
+  let lastPointerType = "mouse";
+
+  function arrangeZoom() {
+    const bounds = imageArea.getBoundingClientRect();
+    const ready = viewer.open && !image.hidden && image.complete &&
+      image.naturalWidth > 0 && image.naturalHeight > 0 && bounds.width > 0 && bounds.height > 0;
+    const fitScale = ready ? Math.min(1, bounds.width / image.naturalWidth,
+      bounds.height / image.naturalHeight) : 1;
+    const canZoom = ready && mouseZoom.matches && fitScale < 1;
+    if (!canZoom) zoomed = false;
+    zoomTarget.classList.toggle("can-zoom", canZoom);
+    zoomTarget.classList.toggle("is-zoomed", zoomed);
+    zoomTarget.tabIndex = canZoom ? 0 : -1;
+    if (canZoom) {
+      zoomTarget.setAttribute("role", "button");
+      zoomTarget.setAttribute("aria-pressed", String(zoomed));
+      zoomTarget.setAttribute("aria-label", `${zoomed ? "Fit photo to screen" : "Zoom photo to actual size"}: ${image.alt}`);
+    } else {
+      for (const attribute of ["role", "aria-pressed", "aria-label"]) zoomTarget.removeAttribute(attribute);
+    }
+    if (!ready) return;
+    const scale = zoomed ? 1 : fitScale;
+    const width = image.naturalWidth * scale;
+    const height = image.naturalHeight * scale;
+    // On an overflowing axis, the pointer's position maps to the full pan
+    // range. Smaller axes stay centred instead of exposing extra empty space.
+    const x = zoomed && width > bounds.width ? -(width - bounds.width) * panPosition.x : (bounds.width - width) / 2;
+    const y = zoomed && height > bounds.height ? -(height - bounds.height) * panPosition.y : (bounds.height - height) / 2;
+    zoomTarget.style.width = `${width}px`;
+    zoomTarget.style.height = `${height}px`;
+    zoomTarget.style.transform = `translate(${x}px, ${y}px)`;
+  }
+
+  function scheduleZoom() {
+    if (zoomFrame === null) zoomFrame = requestAnimationFrame(() => {
+      zoomFrame = null;
+      arrangeZoom();
+    });
+  }
+
+  function resetZoom() {
+    zoomed = false;
+    panPosition = { x: 0.5, y: 0.5 };
+    zoomTarget.style.removeProperty("width");
+    zoomTarget.style.removeProperty("height");
+    zoomTarget.style.removeProperty("transform");
+    arrangeZoom();
+  }
+
+  function trackPan(event) {
+    const bounds = imageArea.getBoundingClientRect();
+    panPosition = {
+      x: Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width)),
+      y: Math.max(0, Math.min(1, (event.clientY - bounds.top) / bounds.height))
+    };
+  }
+
+  function toggleZoom(event) {
+    if (!zoomTarget.classList.contains("can-zoom")) return;
+    if (event) trackPan(event);
+    zoomed = !zoomed;
+    arrangeZoom();
+  }
+
+  zoomTarget.addEventListener("pointerdown", (event) => { lastPointerType = event.pointerType; });
+  zoomTarget.addEventListener("click", (event) => {
+    if (event.button !== 0 || (event.pointerType || lastPointerType) !== "mouse") return;
+    toggleZoom(event);
+  });
+  zoomTarget.addEventListener("keydown", (event) => {
+    if ((event.key === "Enter" || event.key === " ") && !event.repeat &&
+        !event.ctrlKey && !event.metaKey && !event.altKey) {
+      event.preventDefault();
+      toggleZoom();
+    }
+  });
+  imageArea.addEventListener("pointermove", (event) => {
+    if (!zoomed || event.pointerType !== "mouse" || event.target.closest("button")) return;
+    trackPan(event);
+    scheduleZoom();
+  });
+  if (typeof ResizeObserver === "function") new ResizeObserver(scheduleZoom).observe(imageArea);
+  window.addEventListener("resize", scheduleZoom);
+  mouseZoom.addEventListener("change", scheduleZoom);
+  viewer.addEventListener("transitionend", scheduleZoom);
 
   function tagText(tag) {
     return typeof tag?.description === "string" ? tag.description.trim() : "";
@@ -212,6 +302,7 @@
     info.setAttribute("aria-expanded", "false");
     info.setAttribute("aria-label", "Show photo details");
     viewer.classList.remove("has-photo-details");
+    scheduleZoom();
     clearTimeout(detailsCloseTimer);
     const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
     if (animate && detailsDialog.open && !reducedMotion) {
@@ -231,6 +322,7 @@
     details.hidden = false;
     details.setAttribute("aria-busy", "true");
     viewer.classList.add("has-photo-details");
+    scheduleZoom();
     // Keep the photo controls interactive inside the outer modal.
     if (!detailsDialog.open) detailsDialog.show();
 
@@ -277,6 +369,7 @@
     const original = links[index].querySelector("img");
 
     image.hidden = true;
+    resetZoom();
     status.textContent = "Loading photo…";
     status.hidden = false;
     image.alt = original.alt;
@@ -302,10 +395,12 @@
   image.addEventListener("load", () => {
     image.hidden = false;
     status.hidden = true;
+    arrangeZoom();
   });
 
   image.addEventListener("error", () => {
     image.hidden = true;
+    resetZoom();
     status.textContent = "Could not load this photo.";
     status.hidden = false;
   });
@@ -406,6 +501,7 @@
     lastWheelNavigation = -Infinity;
     document.documentElement.classList.remove("photo-viewer-open");
     image.removeAttribute("src");
+    resetZoom();
     if (opener) opener.focus({ preventScroll: true });
   });
 })();
